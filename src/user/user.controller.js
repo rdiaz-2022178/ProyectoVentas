@@ -2,6 +2,8 @@ import { generateJwt } from '../../utils/jwt.js'
 import { comparePassword, encrypt, checkUpdateClient, checkUpdateAdmin } from '../../utils/validator.js'
 import User from '../user/user.model.js'
 import jwt from 'jsonwebtoken'
+import Bill from '../bill/bill.model.js'
+import Shopping from '../shopping/shopping.model.js'
 
 export const test = (req, res) => {
     console.log('Test is running')
@@ -163,5 +165,32 @@ export const defaultAdmin = async () => {
 
     } catch (error) {
         console.error(error)
+    }
+}
+
+export const historyPurchase = async (req, res) => {
+    try {
+        const { token } = req.headers;
+
+        if (!token) {
+            return res.status(401).send({ message: `Token is required. | Login required.` });
+        }
+
+        const { uid } = jwt.verify(token, process.env.SECRET_KEY);
+
+        let purchase = await Bill.find({user: uid}).populate({
+            path: 'items',
+            populate: {
+                path: 'product', // Poblamos el campo 'product' dentro de 'items'
+                model: 'product', // Asumiendo que el modelo de producto se llama 'Product'
+                select: 'name' // Seleccionamos solo el campo 'name' del producto
+            }
+        });
+        return res.send(purchase)
+
+    
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ message: 'Error retrieving purchase history', error: error });
     }
 }

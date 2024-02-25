@@ -1,18 +1,38 @@
 import {Schema, model} from 'mongoose'
 
-const billSchema = Schema({
-    user:{
+const billSchema = new Schema({
+    user: {
         type: Schema.Types.ObjectId,
-        ref: 'user',
-        require: [true, "User is require"]
+        ref: 'User',
+        required: true
     },
-    shopping:{
-        type: Schema.Types.ObjectId,
-        ref: 'shopping',
-        require: [true, "shopping is require"]
+    items: [
+        {
+            product: {
+                type: Schema.Types.ObjectId,
+                ref: 'Product',
+                required: true
+            },
+            quantity: {
+                type: Number,
+                required: true
+            },
+            unitPrice: {
+                type: Number,
+                required: true
+            }
+        }
+    ],
+    totalAmount: {
+        type: Number,
+        required: true
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now
     }
-})
+},{
+    versionKey: false
+});
+
+export default model('bill', billSchema )

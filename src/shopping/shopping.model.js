@@ -17,7 +17,11 @@ const shoppingSchema = Schema({
             default: 1,
             require: [true, "Quantity is require"]
         }
-    }]
+    }],
+    total:{
+        type: Number,
+        require: true
+    }
     
 },{
     versionKey: false
