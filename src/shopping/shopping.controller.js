@@ -84,7 +84,7 @@ export const add = async (req, res) => {
                 items: billItems,
                 totalAmount: shopping.total
             });
-            await bill.save();
+            const savedBill = await bill.save();
 
             // Actualizar el stock de los productos
             for (const item of shopping.products) {
@@ -99,7 +99,7 @@ export const add = async (req, res) => {
             await Shopping.deleteOne({ _id: shopping._id });
 
 
-            return res.status(200).send({ message: 'Purchase completed successfully and bill generated.' });
+            return res.status(200).send({ message: 'Purchase completed successfully and bill generated.', bill: savedBill });
         }
     } catch (error) {
         console.error(error);
