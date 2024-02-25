@@ -141,3 +141,27 @@ export const deleted = async (req, res) => {
         return res.status(500).send({ message: 'Error deleting account' })
     }
 }
+
+export const defaultAdmin = async () => {
+    try {
+        const existingUser = await User.findOne({ username: 'default' });
+
+        if (existingUser) {
+            console.log('El username "default" ya está en uso.');
+            return; 
+        }
+        let data = {
+            name: 'Default',
+            lastname: 'default',
+            username: 'default',
+            password: await encrypt('hola'),
+            role: 'ADMIN'
+        }
+
+        let user = new User(data)
+        await user.save()
+
+    } catch (error) {
+        console.error(error)
+    }
+}

@@ -6,16 +6,19 @@ const shoppingSchema = Schema({
         ref: 'user',
         require: [true, "User is require"]
     },
-    product:{
-        type: Schema.Types.ObjectId,
-        ref: 'product',
-        require: [true, "product is require"]
-    },
-    quantity:{
-        type: Number,
-        default: 1,
-        require: [true, "Quantity is require"]
-    }
+    products:[{
+        product:{
+            type: Schema.Types.ObjectId,
+            ref: 'product',
+            require: [true, "Product is require"]
+        },
+        quantity:{
+            type: Number,
+            default: 1,
+            require: [true, "Quantity is require"]
+        }
+    }]
+    
 },{
     versionKey: false
 })

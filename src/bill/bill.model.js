@@ -11,9 +11,8 @@ const billSchema = Schema({
         ref: 'shopping',
         require: [true, "shopping is require"]
     },
-    quantity:{
-        type: Number,
-        default: 1,
-        require: [true, "Quantity is require"]
+    date:{
+        type: Date,
+        default: Date.now
     }
 })
