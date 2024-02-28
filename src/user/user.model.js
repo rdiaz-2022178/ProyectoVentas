@@ -17,7 +17,7 @@ const userSchema = Schema({
     },
     email:{
         type: String,
-        require: [true, "Username is require"]
+        require: [true, "email is require"]
     },
     password: {
         type: String,

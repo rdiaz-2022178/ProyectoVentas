@@ -1,6 +1,9 @@
 import Category from '../category/category.model.js'
 import Product from '../product/product.model.js'
 import { checkUpdateClient } from '../../utils/validator.js'
+import Bill from '../bill/bill.model.js'
+import mongoose from 'mongoose';
+
 
 export const test = (req, res) => {
     console.log('Test is running')
@@ -84,3 +87,56 @@ export const exhausted = async (req, res) => {
         return res.status(500).send({ message: 'the information cannot be brought' })
     }
 }
+
+
+
+export const bestSellingProducts = async (req, res) => {
+    try {
+        const bestSellingProducts = await Bill.aggregate([
+            // Desagregamos los elementos del array "items" para obtener un documento por cada elemento
+            { $unwind: "$items" },
+            // Agrupamos por el ID del producto y sumamos la cantidad vendida
+            { $group: {
+                _id: "$items.product",
+                totalQuantity: { $sum: "$items.quantity" }
+            }},
+            { $sort: { totalQuantity: -1 } },
+            { $limit: 10 }
+        ]);
+
+        const productsDetails = await Product.find({ _id: { $in: bestSellingProducts.map(item => item._id) } });
+
+        // Combinamos la información de los productos más vendidos y sus detalles
+        const bestSellingProductsDetails = bestSellingProducts.map(item => {
+            const productDetail = productsDetails.find(product => product._id.toString() === item._id.toString());
+            return {
+                product: productDetail,
+                totalQuantity: item.totalQuantity
+            };
+        });
+
+        return res.status(200).send(bestSellingProductsDetails);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ message: 'Error retrieving best selling products', error: error });
+    }
+}
+
+export const filterByCategory = async (req, res) => {
+    try {
+        let { id } = req.params;
+
+        // Verificamos si el categoryId es un ObjectId válido
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send({ message: 'Invalid category ID' });
+        }
+
+        // Buscamos los productos que pertenecen a la categoría especificada
+        let products = await Product.find({ category: id });
+
+        return res.status(200).send(products);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send({ message: 'Error retrieving products by category', error: error });
+    }
+};

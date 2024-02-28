@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { add, catalogue, deleted, exhausted, search, test, update } from './product.controller.js'
+import { add, bestSellingProducts, catalogue, deleted, exhausted, search, test, update, filterByCategory } from './product.controller.js'
 import { validateJwt, isAdmin } from '../middleware/validate.js'
 
 const api = Router()
@@ -11,5 +11,7 @@ api.delete('/delete/:id', [validateJwt, isAdmin], deleted)
 api.get('/search/:search', search)
 api.get('/catalogue', catalogue)
 api.get('/exhausted', [validateJwt, isAdmin], exhausted)
+api.get('/bestSeller', bestSellingProducts)
+api.get('/filterCategory/:id', filterByCategory)
 
 export default api

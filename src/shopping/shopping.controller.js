@@ -27,10 +27,21 @@ export const add = async (req, res) => {
                 const newShopping = new Shopping({
                     user: uid,
                     products: [{ product: product, quantity }],
-                    total: 0 // Inicializamos el total en 0
+                    total: 0  // Inicializamos el total en 0
                 });
+                let total = 0;
+                for (const item of newShopping.products) {
+                    const productData = await Product.findById(item.product);
+                    if (productData) {
+                        total += productData.price * item.quantity;
+                    }
+                }
+                newShopping.total = total; // Actualizamos el total del carrito
+
+                // Guardamos el carrito
                 await newShopping.save();
-                return res.status(200).send({ message: 'Product added to shopping cart successfully.' });
+
+                return res.status(200).send({ message: 'Product added to shopping cart successfully.', total });
             }
 
             // Verificamos si el producto ya está en el carrito
@@ -55,7 +66,7 @@ export const add = async (req, res) => {
             shopping.total = total;
 
             await shopping.save();
-            return res.status(200).send({ message: 'Product added to shopping cart successfully.' });
+            return res.status(200).send({ message: 'Product added to shopping cart successfully.', total });
         } else {
             if (completeShop !== 'CONFIRM') return res.status(400).send({ message: `Validation word must be -> CONFIRM` });
 
@@ -95,7 +106,7 @@ export const add = async (req, res) => {
                 }
             }
 
-           
+
             await Shopping.deleteOne({ _id: shopping._id });
 
 
