@@ -76,12 +76,10 @@ export const login = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
-        let { token } = req.headers
         let { id } = req.params
         let data = req.body
-        if (!token) return res.status(401).send({ message: `Token is required. | Login required.` })
-        let { role, uid } = jwt.verify(token, process.env.SECRET_KEY)
-
+        let uid = req.user._id
+        let role = req.user.role
         switch (role) {
             case 'ADMIN':
                 let update = checkUpdateAdmin(data, id)
@@ -97,7 +95,7 @@ export const update = async (req, res) => {
 
             case 'CLIENT':
                 let updated = checkUpdateClient(data, id)
-                if(id !== uid) return  res.status(401).send({ message: 'you can only delete your account' })
+                if(id != uid) return  res.status(401).send({ message: 'you can only update your account' })
                 if (!updated) return res.status(400).send({ message: 'Have submitted some data that cannot be updated or missing data' })
                 let updatedUsers = await User.findOneAndUpdate(
                     { _id: uid }, //ObjectsId <- hexadecimales (Hora sys, Version Mongo, Llave privada...)
@@ -118,12 +116,10 @@ export const update = async (req, res) => {
 
 export const deleted = async (req, res) => {
     try {
-        let { token } = req.headers
         let { id } = req.params
         let { validationWord } = req.body
-        if (!token) return res.status(401).send({ message: `Token is required. | Login required.` })
-        let { role, uid } = jwt.verify(token, process.env.SECRET_KEY);
-
+        let uid = req.user._id
+        let role = req.user.role
         switch (role) {
             case 'ADMIN':
                 if (!validationWord) return res.status(400).send({ message: `valitaion word IS REQUIRED.` });
@@ -136,7 +132,7 @@ export const deleted = async (req, res) => {
             case 'CLIENT':
                 if (!validationWord) return res.status(400).send({ message: `valitaion word IS REQUIRED.` });
                 if (validationWord !== 'CONFIRM') return res.status(400).send({ message: `valitaion word must be -> CONFIRM` });
-                if(id !== uid) return  res.status(401).send({ message: 'you can only delete your account' })
+                if(id != uid) return  res.status(401).send({ message: 'you can only delete your account' })
                 let deletedUsers = await User.findOneAndDelete({ _id: uid })
                 if (!deletedUsers) return res.status(404).send({ message: 'Account not found and not deleted' })
                 return res.send({ message: `Account with username ${deletedUsers.username} deleted successfully` }) //status 200
@@ -154,13 +150,13 @@ export const defaultAdmin = async () => {
         const existingUser = await User.findOne({ username: 'default' });
 
         if (existingUser) {
-            console.log('El username "default" ya está en uso.');
             return; 
         }
         let data = {
             name: 'Default',
             lastname: 'default',
             username: 'default',
+            email: 'default@gmail.com',
             password: await encrypt('hola'),
             role: 'ADMIN'
         }
@@ -175,13 +171,7 @@ export const defaultAdmin = async () => {
 
 export const historyPurchase = async (req, res) => {
     try {
-        const { token } = req.headers;
-
-        if (!token) {
-            return res.status(401).send({ message: `Token is required. | Login required.` });
-        }
-
-        const { uid } = jwt.verify(token, process.env.SECRET_KEY);
+        let uid = req.user._id
 
         let purchase = await Bill.find({user: uid}).populate({
             path: 'items',

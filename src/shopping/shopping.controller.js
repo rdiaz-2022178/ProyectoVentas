@@ -11,14 +11,9 @@ export const test = (req, res) => {
 export const add = async (req, res) => {
     try {
         let { product, quantity } = req.body;
-        let { token } = req.headers;
         let { completeShop } = req.body;
-
-        if (!token) {
-            return res.status(401).send({ message: `Token is required. | Login required.` });
-        }
-
-        const { uid } = jwt.verify(token, process.env.SECRET_KEY);
+        let uid = req.user._id
+        let role = req.user.role
 
         if (!completeShop) {
             let shopping = await Shopping.findOne({ user: uid });

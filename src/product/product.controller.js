@@ -30,13 +30,31 @@ export const update = async (req, res) => {
         let { id } = req.params
         let update = checkUpdateClient(data, false)
         if (!update) return res.status(400).send({ message: 'Have submitted some data that cannot be updated or missing data' })
-        let updatePro = await Product.findOneAndUpdate(
+        let updatedProduct = await Product.findOneAndUpdate(
             { _id: id },
             data,
             { new: true }
         ).populate('category')
-        if (!updatePro) return res.status(401).send({ message: 'Product not found and not updated' })
-        return res.send({ message: 'Updated product', updatePro })
+        if (!updatedProduct) return res.status(401).send({ message: 'Product not found and not updated' })
+        const billsToUpdate = await Bill.find({ 'items.product': id });
+
+        // Actualizar el precio unitario del producto en las facturas
+        const updateBillsPromises = billsToUpdate.map(async (bill) => {
+            // Actualizar el precio unitario del producto en cada ítem de la factura
+            bill.items.forEach((item) => {
+                if (item.product.toString() === id) {
+                    item.unitPrice = updatedProduct.price;
+                }
+            });
+            // Calcular el nuevo totalAmount
+            bill.totalAmount = bill.items.reduce((total, item) => total + (item.quantity * item.unitPrice), 0);
+            // Guardar la factura actualizada
+            await bill.save();
+        });
+
+        await Promise.all(updateBillsPromises);
+
+        return res.send({ message: 'Product updated', updatedProduct });
     } catch (error) {
         console.error(error);
         return res.status(500).send({ message: 'error updating' })
@@ -93,13 +111,14 @@ export const exhausted = async (req, res) => {
 export const bestSellingProducts = async (req, res) => {
     try {
         const bestSellingProducts = await Bill.aggregate([
-            // Desagregamos los elementos del array "items" para obtener un documento por cada elemento
             { $unwind: "$items" },
             // Agrupamos por el ID del producto y sumamos la cantidad vendida
-            { $group: {
-                _id: "$items.product",
-                totalQuantity: { $sum: "$items.quantity" }
-            }},
+            {
+                $group: {
+                    _id: "$items.product",
+                    totalQuantity: { $sum: "$items.quantity" }
+                }
+            },
             { $sort: { totalQuantity: -1 } },
             { $limit: 10 }
         ]);
@@ -140,3 +159,4 @@ export const filterByCategory = async (req, res) => {
         return res.status(500).send({ message: 'Error retrieving products by category', error: error });
     }
 };
+

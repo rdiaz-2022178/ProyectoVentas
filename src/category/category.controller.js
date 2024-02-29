@@ -1,5 +1,6 @@
 import { checkUpdateClient } from '../../utils/validator.js'
 import Category from '../category/category.model.js'
+import Product from '../product/product.model.js'
 
 export const test = (req, res) => {
     console.log('Test is running')
@@ -45,15 +46,38 @@ export const update = async (req, res) => {
 
 export const deleted = async (req, res) => {
     try {
-        let { id } = req.params
-        let deleteCategory = await Category.findOneAndDelete({ _id: id })
-        if (!deleteCategory) return res.status(404).send({ message: 'the category does not exist' })
-        return res.send({ message: `category with name ${deleteCategory.name} deleted successfully` })
+        let { id } = req.params;
+        
+        // Buscar la categoría que se va a eliminar
+        let categoryToDelete = await Category.findById(id);
+        if (!categoryToDelete) {
+            return res.status(404).send({ message: 'The category does not exist' });
+        }
+
+        // Buscar la categoría 'default'
+        let defaultCategory = await Category.findOne({ name: 'Default' });
+        if (!defaultCategory) {
+            return res.status(404).send({ message: 'Default category not found' });
+        }
+
+        // Actualizar los productos relacionados a la categoría que se está eliminando
+        let updateProducts = await Product.updateMany(
+            { category: categoryToDelete._id },
+            { $set: { category: defaultCategory._id } }
+        );
+
+        // Eliminar la categoría
+        let deleteCategory = await Category.findOneAndDelete({ _id: id });
+        if (!deleteCategory) {
+            return res.status(404).send({ message: 'Error when deleting category' });
+        }
+
+        return res.send({ message: `Category with name ${deleteCategory.name} deleted successfully` });
     } catch (error) {
-        console.error(error)
-        return res.status(404).send({ message: 'error when deleting check' })
+        console.error(error);
+        return res.status(500).send({ message: 'Internal server error' });
     }
-}
+};
 
 export const find = async (req, res) => {
     try {
@@ -62,5 +86,25 @@ export const find = async (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(500).send({ message: 'the information cannot be brought' })
+    }
+}
+
+export const defaultCategory = async () => {
+    try {
+        const existingCategory = await Category.findOne({ name: 'Default' });
+
+        if (existingCategory) {
+            return; 
+        }
+        let data = {
+            name: 'Default',
+            description: 'default'
+        }
+
+        let category = new Category(data)
+        await category.save()
+
+    } catch (error) {
+        console.error(error)
     }
 }

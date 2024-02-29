@@ -1,38 +1,74 @@
 import Bill from './bill.model.js'
+import Product from '../product/product.model.js'
 
-export const getBestSellingProducts = async (req, res) => {
+export const update = async (req, res) => {
     try {
-        const bestSellingProducts = await Bill.aggregate([
-            // Desagregamos los elementos del array "items" para obtener un documento por cada elemento
-            { $unwind: "$items" },
-            // Agrupamos por el ID del producto y sumamos la cantidad vendida
-            { $group: {
-                _id: "$items.product",
-                totalQuantity: { $sum: "$items.quantity" }
-            }},
-            // Ordenamos en orden descendente por la cantidad total vendida
-            { $sort: { totalQuantity: -1 } },
-            // Limitamos el resultado a los primeros N productos más vendidos (por ejemplo, los 10 más vendidos)
-            { $limit: 10 }
-        ]);
+        const { id, itemId } = req.params;
+        const { product, quantity } = req.body;
 
-        // Podemos mapear los resultados para obtener información adicional de cada producto si es necesario
-        // Por ejemplo, podemos buscar los detalles de cada producto en la colección de productos
-        // Aquí, suponemos que los detalles del producto están en la colección de productos "Product"
-        const productsDetails = await Product.find({ _id: { $in: bestSellingProducts.map(item => item._id) } });
+        // Validar si se proporcionó el producto y la cantidad
+        if (!product && !quantity) {
+            return res.status(400).send({ message: 'Product and quantity are required' });
+        }
 
-        // Combinamos la información de los productos más vendidos y sus detalles
-        const bestSellingProductsDetails = bestSellingProducts.map(item => {
-            const productDetail = productsDetails.find(product => product._id.toString() === item._id.toString());
-            return {
-                product: productDetail,
-                totalQuantity: item.totalQuantity
-            };
-        });
+        // Encontrar la factura
+        const bill = await Bill.findById(id);
+        if (!bill) {
+            return res.status(404).send({ message: 'Bill not found' });
+        }
 
-        return res.status(200).json(bestSellingProductsDetails);
+        // Encontrar el ítem de la factura que se va a actualizar
+        const itemToUpdate = bill.items.find(item => item._id.toString() === itemId);
+        if (!itemToUpdate) {
+            return res.status(404).send({ message: 'Item not found in the bill' });
+        }
+
+        // Actualizar el producto y/o la cantidad
+        if (product) {
+            itemToUpdate.product = product;
+
+            // Obtener el precio del producto y actualizar el unitPrice del ítem
+            const productInfo = await Product.findById(product);
+            if (!productInfo) {
+                return res.status(404).send({ message: 'Product not found' });
+            }
+            const oldUnitPrice = itemToUpdate.unitPrice;
+            itemToUpdate.unitPrice = productInfo.price;
+
+            // Recalcular el totalAmount basado en el cambio en el unitPrice
+            bill.totalAmount += (itemToUpdate.unitPrice - oldUnitPrice) * itemToUpdate.quantity;
+
+            // Actualizar el stock del producto en base a la diferencia en la cantidad
+            if (quantity !== undefined) {
+                const oldQuantity = itemToUpdate.quantity;
+                const quantityDifference = quantity - oldQuantity;
+                productInfo.stock -= quantityDifference;
+                await productInfo.save();
+            }
+        }
+        if (quantity !== undefined) {
+            const oldQuantity = itemToUpdate.quantity;
+            const quantityDifference = quantity - oldQuantity;
+            itemToUpdate.quantity = quantity;
+
+            // Recalcular el totalAmount basado en la diferencia en la cantidad
+            bill.totalAmount += quantityDifference * itemToUpdate.unitPrice;
+
+            // Actualizar el stock del producto en base a la diferencia en la cantidad
+            const productInfo = await Product.findById(itemToUpdate.product);
+            if (!productInfo) {
+                return res.status(404).send({ message: 'Product not found' });
+            }
+            productInfo.stock -= quantityDifference; // Aquí restamos la diferencia
+            await productInfo.save();
+        }
+
+        // Guardar la factura actualizada
+        await bill.save();
+
+        return res.send({ message: 'Item updated successfully', bill });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'Error retrieving best selling products', error: error });
+        return res.status(500).send({ message: 'Error updating item' });
     }
 };

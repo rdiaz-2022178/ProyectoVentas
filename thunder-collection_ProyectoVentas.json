@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "ProyectoVentas",
-    "dateExported": "2024-02-23T00:21:49.145Z",
+    "dateExported": "2024-02-29T23:19:48.731Z",
     "version": "1.1",
     "folders": [
         {
@@ -24,6 +24,20 @@
             "containerId": "",
             "created": "2024-02-23T00:06:01.916Z",
             "sortNum": 30000
+        },
+        {
+            "_id": "7abd70d7-24a7-4aca-a578-140075b0b9a2",
+            "name": "shopping",
+            "containerId": "",
+            "created": "2024-02-25T18:01:26.086Z",
+            "sortNum": 40000
+        },
+        {
+            "_id": "418ead72-5b66-43f4-b61c-e01ea5708b46",
+            "name": "bill",
+            "containerId": "",
+            "created": "2024-02-29T21:59:23.321Z",
+            "sortNum": 50000
         }
     ],
     "requests": [
@@ -36,7 +50,7 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2024-02-23T00:06:22.838Z",
-            "modified": "2024-02-23T00:07:33.750Z",
+            "modified": "2024-02-28T01:46:07.273Z",
             "headers": [],
             "params": [],
             "body": {
@@ -45,7 +59,7 @@
                 "form": [
                     {
                         "name": "name",
-                        "value": "Rosa"
+                        "value": "Izzel"
                     },
                     {
                         "name": "lastname",
@@ -53,11 +67,15 @@
                     },
                     {
                         "name": "username",
-                        "value": "rosa"
+                        "value": "izzel"
                     },
                     {
                         "name": "password",
                         "value": "hola"
+                    },
+                    {
+                        "name": "email",
+                        "value": "izzel@gmail.com"
                     }
                 ]
             },
@@ -108,7 +126,7 @@
             "method": "POST",
             "sortNum": 30000,
             "created": "2024-02-23T00:08:38.512Z",
-            "modified": "2024-02-23T00:13:01.998Z",
+            "modified": "2024-02-29T22:39:51.819Z",
             "headers": [],
             "params": [],
             "body": {
@@ -116,7 +134,7 @@
                 "raw": "",
                 "form": [
                     {
-                        "name": "username",
+                        "name": "user",
                         "value": "rodro"
                     },
                     {
@@ -132,15 +150,15 @@
             "colId": "256951b8-ab8a-4e05-8424-4b6de43a6bea",
             "containerId": "fa6ffb1f-8f49-4e67-b4ec-c5e4b2a1944b",
             "name": "update",
-            "url": "user/update/65d7e1c516498b1df8edc5ae",
+            "url": "user/update/65d6a2545754b8f6f19bc1e0",
             "method": "PUT",
             "sortNum": 40000,
             "created": "2024-02-23T00:09:16.918Z",
-            "modified": "2024-02-23T00:09:58.117Z",
+            "modified": "2024-02-29T22:19:03.671Z",
             "headers": [
                 {
                     "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ3ZTFjNTE2NDk4YjFkZjhlZGM1YWUiLCJ1c2VybmFtZSI6InJvc2EiLCJuYW1lIjoiUm9zYSIsInJvbGUiOiJDTElFTlQiLCJpYXQiOjE3MDg2NDY5NDAsImV4cCI6MTcwODY1MDU0MH0.Zn5LnhFRpdIxPzOG4aEVALgPKZfRtg057brn7Sc5LY0"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2YTI1NDU3NTRiOGY2ZjE5YmMxZTAiLCJ1c2VybmFtZSI6ImFuYSIsIm5hbWUiOiJhbmEiLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzA5MjQ1MDk0LCJleHAiOjE3MDkyNDg2OTR9.J4ChP4JL_hJizjgEh1jFcPLsa3My8FG581ImM49eF98"
                 }
             ],
             "params": [],
@@ -150,7 +168,7 @@
                 "form": [
                     {
                         "name": "name",
-                        "value": "Rose"
+                        "value": "Ana"
                     }
                 ]
             },
@@ -194,11 +212,11 @@
             "method": "POST",
             "sortNum": 60000,
             "created": "2024-02-23T00:11:32.561Z",
-            "modified": "2024-02-23T00:13:10.558Z",
+            "modified": "2024-02-25T19:24:06.455Z",
             "headers": [
                 {
                     "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2OTNmMjk1NDc1NTA1ZWE0YThkOTgiLCJ1c2VybmFtZSI6InJvZHJvIiwibmFtZSI6IlJvZHJpZ28iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MDg2NDcxODEsImV4cCI6MTcwODY1MDc4MX0.5M3MleqlnsrmjiYQH0koJpuBx6yFgbtZ19VgVjUVWxE"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2OTNmMjk1NDc1NTA1ZWE0YThkOTgiLCJ1c2VybmFtZSI6InJvZHJvIiwicGFzc3dvcmQiOiIkMmIkMTAkMkdncDdEaXFEQXpHUmFjaWM2NEZoT29BOVQvMlJhY1VqLnFLN1ZQNzQ4Rk4zbFQvdGRMVmEiLCJuYW1lIjoiUm9kcmlnbyIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwODg4ODk0MCwiZXhwIjoxNzA4ODkyNTQwfQ.TBxJzh9yTFa1mk5S9XBRu8gleOnJmrpEXbyVWPnoJew"
                 }
             ],
             "params": [],
@@ -208,11 +226,11 @@
                 "form": [
                     {
                         "name": "name",
-                        "value": "Juego"
+                        "value": "juegos"
                     },
                     {
                         "name": "price",
-                        "value": "130"
+                        "value": "50"
                     },
                     {
                         "name": "stock",
@@ -231,15 +249,15 @@
             "colId": "256951b8-ab8a-4e05-8424-4b6de43a6bea",
             "containerId": "8e3d626f-d317-40b1-887f-e5f20a660515",
             "name": "update",
-            "url": "product/update/65d6a7ceee7c566d6c329623",
+            "url": "product/update/65db8a1852256a4c35d5ddae",
             "method": "PUT",
             "sortNum": 70000,
             "created": "2024-02-23T00:13:30.075Z",
-            "modified": "2024-02-23T00:14:00.433Z",
+            "modified": "2024-02-29T22:45:00.440Z",
             "headers": [
                 {
                     "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2OTNmMjk1NDc1NTA1ZWE0YThkOTgiLCJ1c2VybmFtZSI6InJvZHJvIiwibmFtZSI6IlJvZHJpZ28iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MDg2NDcxODEsImV4cCI6MTcwODY1MDc4MX0.5M3MleqlnsrmjiYQH0koJpuBx6yFgbtZ19VgVjUVWxE"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2OTNmMjk1NDc1NTA1ZWE0YThkOTgiLCJ1c2VybmFtZSI6InJvZHJvIiwibmFtZSI6IlJvZHJpZ28iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MDkyNDYzOTEsImV4cCI6MTcwOTI0OTk5MX0.gNH8lTZhSdeZi97OTR7u36s7OAOTB_OdITSpM2dl-f8"
                 }
             ],
             "params": [],
@@ -249,7 +267,11 @@
                 "form": [
                     {
                         "name": "name",
-                        "value": "Control"
+                        "value": "Juegos de videos2"
+                    },
+                    {
+                        "name": "price",
+                        "value": "101"
                     }
                 ]
             },
@@ -388,15 +410,15 @@
             "colId": "256951b8-ab8a-4e05-8424-4b6de43a6bea",
             "containerId": "6aca8aea-c4ea-415e-9c5c-8fa0d68a6309",
             "name": "delete",
-            "url": "category/delete/65d7e4a216498b1df8edc5cf",
+            "url": "category/delete/65d6a177f6b9c47b3fc90852",
             "method": "DELETE",
             "sortNum": 140000,
             "created": "2024-02-23T00:20:31.456Z",
-            "modified": "2024-02-23T00:20:54.274Z",
+            "modified": "2024-02-29T22:13:09.022Z",
             "headers": [
                 {
                     "name": "token",
-                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2OTNmMjk1NDc1NTA1ZWE0YThkOTgiLCJ1c2VybmFtZSI6InJvZHJvIiwibmFtZSI6IlJvZHJpZ28iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MDg2NDc1NzUsImV4cCI6MTcwODY1MTE3NX0.5d4a71yhMV0AamvEh6Oz_ZtD8mHUF3SnptN6n55JNmI"
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2OTNmMjk1NDc1NTA1ZWE0YThkOTgiLCJ1c2VybmFtZSI6InJvZHJvIiwibmFtZSI6IlJvZHJpZ28iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MDkyNDQ3NzIsImV4cCI6MTcwOTI0ODM3Mn0.K31gC23d0AttHtgMyeLiTYBZGtn6UIW-aQgBx6Yu9Yg"
                 }
             ],
             "params": [],
@@ -414,6 +436,114 @@
             "modified": "2024-02-23T00:21:37.313Z",
             "headers": [],
             "params": [],
+            "tests": []
+        },
+        {
+            "_id": "1e43ac35-e60c-41a3-9b10-ca73895b9f4c",
+            "colId": "256951b8-ab8a-4e05-8424-4b6de43a6bea",
+            "containerId": "7abd70d7-24a7-4aca-a578-140075b0b9a2",
+            "name": "add",
+            "url": "shopping/add",
+            "method": "POST",
+            "sortNum": 160000,
+            "created": "2024-02-25T18:01:31.811Z",
+            "modified": "2024-02-29T22:33:48.243Z",
+            "headers": [
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2YTI1NDU3NTRiOGY2ZjE5YmMxZTAiLCJ1c2VybmFtZSI6ImFuYSIsIm5hbWUiOiJBbmEiLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzA5MjQ1OTg1LCJleHAiOjE3MDkyNDk1ODV9.7TUHSzqnaUmlQiMVAban33N6BLW_fi3sI2V8CJOj_CU"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "product",
+                        "value": "65db93d6ea2c5b6338a36b56"
+                    },
+                    {
+                        "name": "quantity",
+                        "value": "3"
+                    },
+                    {
+                        "name": "completeShop",
+                        "value": "CONFIRM"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "f05c0d0a-9d25-4374-ba4e-6d6793d28752",
+            "colId": "256951b8-ab8a-4e05-8424-4b6de43a6bea",
+            "containerId": "fa6ffb1f-8f49-4e67-b4ec-c5e4b2a1944b",
+            "name": "history",
+            "url": "user/history",
+            "method": "GET",
+            "sortNum": 170000,
+            "created": "2024-02-25T19:57:16.750Z",
+            "modified": "2024-02-29T22:21:25.012Z",
+            "headers": [
+                {
+                    "name": "token",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NWQ2YTI1NDU3NTRiOGY2ZjE5YmMxZTAiLCJ1c2VybmFtZSI6ImFuYSIsIm5hbWUiOiJBbmEiLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzA5MjQ1Mjc2LCJleHAiOjE3MDkyNDg4NzZ9.zWhMEDQ55GbuuJyU8BRzFbx0287sVDcgjI1rpsN0a5E"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "16127129-edab-4f89-a4f4-0f043f498ef0",
+            "colId": "256951b8-ab8a-4e05-8424-4b6de43a6bea",
+            "containerId": "8e3d626f-d317-40b1-887f-e5f20a660515",
+            "name": "bestSeller",
+            "url": "product/bestSeller",
+            "method": "GET",
+            "sortNum": 180000,
+            "created": "2024-02-28T02:08:07.511Z",
+            "modified": "2024-02-28T02:08:20.759Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c7107cd2-539f-4187-a5a5-22ed6264c00d",
+            "colId": "256951b8-ab8a-4e05-8424-4b6de43a6bea",
+            "containerId": "8e3d626f-d317-40b1-887f-e5f20a660515",
+            "name": "filterCategory",
+            "url": "product/filterCategory/65d6a177f6b9c47b3fc90852",
+            "method": "GET",
+            "sortNum": 190000,
+            "created": "2024-02-28T02:12:39.768Z",
+            "modified": "2024-02-28T02:17:33.742Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c0e067e5-84fc-40d7-9714-656b71b7a2b5",
+            "colId": "256951b8-ab8a-4e05-8424-4b6de43a6bea",
+            "containerId": "418ead72-5b66-43f4-b61c-e01ea5708b46",
+            "name": "update",
+            "url": "bill/update/65de91227b8e1155be6e905a/65de91227b8e1155be6e905c",
+            "method": "PUT",
+            "sortNum": 200000,
+            "created": "2024-02-29T22:58:53.199Z",
+            "modified": "2024-02-29T23:18:21.261Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formencoded",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "quantity",
+                        "value": "6"
+                    }
+                ]
+            },
             "tests": []
         }
     ],
