@@ -13,7 +13,11 @@ export const add = async (req, res) => {
         let { product, quantity } = req.body;
         let { completeShop } = req.body;
         let uid = req.user._id
-        let role = req.user.role
+
+        const productData = await Product.findById(product);
+        if (!productData || productData.stock === 0 || quantity > productData.stock) {
+            return res.status(400).send({ message: 'Insufficient stock' });
+        }
 
         if (!completeShop) {
             let shopping = await Shopping.findOne({ user: uid });
@@ -26,7 +30,7 @@ export const add = async (req, res) => {
                 });
                 let total = 0;
                 for (const item of newShopping.products) {
-                    const productData = await Product.findById(item.product);
+                    let productData = await Product.findById(item.product);
                     if (productData) {
                         total += productData.price * item.quantity;
                     }
@@ -49,6 +53,7 @@ export const add = async (req, res) => {
                 // Si el producto no está en el carrito, lo agregamos
                 shopping.products.push({ product: product, quantity });
             }
+            
 
             // Calculamos el total del carrito
             let total = 0;
