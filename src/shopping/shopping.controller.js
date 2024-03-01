@@ -2,6 +2,7 @@ import Shopping from './shopping.model.js'
 import jwt from 'jsonwebtoken'
 import Product from '../product/product.model.js'
 import Bill from '../bill/bill.model.js'
+import PDF from 'pdfkit'
 
 export const test = (req, res) => {
     console.log('Test is running')
@@ -53,7 +54,7 @@ export const add = async (req, res) => {
                 // Si el producto no está en el carrito, lo agregamos
                 shopping.products.push({ product: product, quantity });
             }
-            
+
 
             // Calculamos el total del carrito
             let total = 0;
@@ -112,6 +113,25 @@ export const add = async (req, res) => {
 
             return res.status(200).send({ message: 'Purchase completed successfully and bill generated.', bill: savedBill });
         }
+        const doc = new PDF();
+        const pdfPath = `bill_${savedBill._id}.pdf`; // Nombre del archivo PDF
+
+        doc.pipe(fs.createWriteStream(pdfPath));
+
+        doc.fontSize(20).text('Factura', { align: 'center' }).moveDown();
+
+        doc.fontSize(12).text(`Usuario: ${savedBill.user}`, { align: 'left' });
+        doc.text(`Fecha: ${savedBill.date}`, { align: 'left' }).moveDown();
+
+        doc.text('Items de la factura:', { align: 'left' }).moveDown();
+
+        for (const item of savedBill.items) {
+            doc.text(`- Producto: ${item.product}, Cantidad: ${item.quantity}, Precio Unitario: ${item.unitPrice}`, { align: 'left' });
+        }
+
+        doc.moveDown().text(`Total: ${savedBill.totalAmount}`, { align: 'right' });
+
+        doc.end();
     } catch (error) {
         console.error(error);
         return res.status(500).send({ message: 'Error registering ', error: error });
