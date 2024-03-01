@@ -2,7 +2,12 @@ import Shopping from './shopping.model.js'
 import jwt from 'jsonwebtoken'
 import Product from '../product/product.model.js'
 import Bill from '../bill/bill.model.js'
-import PDF from 'pdfkit'
+import PDFDocument from 'pdfkit';
+import fs from 'fs';
+import path from 'path'
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
 
 export const test = (req, res) => {
     console.log('Test is running')
@@ -110,30 +115,49 @@ export const add = async (req, res) => {
 
             await Shopping.deleteOne({ _id: shopping._id });
 
-
+            const pdfPath = await billPDF(savedBill);
+            console.log('PDF generado:', pdfPath);
             return res.status(200).send({ message: 'Purchase completed successfully and bill generated.', bill: savedBill });
-        }
-        const doc = new PDF();
-        const pdfPath = `bill_${savedBill._id}.pdf`; // Nombre del archivo PDF
 
-        doc.pipe(fs.createWriteStream(pdfPath));
-
-        doc.fontSize(20).text('Factura', { align: 'center' }).moveDown();
-
-        doc.fontSize(12).text(`Usuario: ${savedBill.user}`, { align: 'left' });
-        doc.text(`Fecha: ${savedBill.date}`, { align: 'left' }).moveDown();
-
-        doc.text('Items de la factura:', { align: 'left' }).moveDown();
-
-        for (const item of savedBill.items) {
-            doc.text(`- Producto: ${item.product}, Cantidad: ${item.quantity}, Precio Unitario: ${item.unitPrice}`, { align: 'left' });
         }
 
-        doc.moveDown().text(`Total: ${savedBill.totalAmount}`, { align: 'right' });
-
-        doc.end();
     } catch (error) {
         console.error(error);
         return res.status(500).send({ message: 'Error registering ', error: error });
     }
 }
+
+export const billPDF = async (bill) => {
+    return new Promise((resolve, reject) => {
+        const doc = new PDFDocument();
+        const __filename = fileURLToPath(import.meta.url);
+        const currentDir = dirname(__filename);
+        const billsDir = join(currentDir, '..', '..', 'bills'); // Retrocedemos dos veces para llegar a 'bills'
+        const pdfPath = join(billsDir, `FacturaNo.${bill._id}.pdf`); // Ruta del archivo PDF
+
+        const stream = doc.pipe(fs.createWriteStream(pdfPath)); // Definimos la variable stream
+
+        doc.fontSize(20).text('Factura', { align: 'center' }).moveDown();
+
+        doc.fontSize(12).text(`Usuario: ${bill.user}`, { align: 'left' });
+        doc.text(`Fecha: ${bill.date}`, { align: 'left' }).moveDown();
+
+        doc.text('Items de la factura:', { align: 'left' }).moveDown();
+
+        for (const item of bill.items) {
+            doc.text(`- Producto: ${item.product}, Cantidad: ${item.quantity}, Precio Unitario: ${item.unitPrice}`, { align: 'left' });
+        }
+
+        doc.moveDown().text(`Total: ${bill.totalAmount}`, { align: 'right' });
+
+        doc.end();
+
+        stream.on('finish', () => {
+            resolve(pdfPath);
+        });
+
+        stream.on('error', (err) => {
+            reject(err);
+        });
+    });
+};
